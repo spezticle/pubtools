@@ -1,0 +1,20 @@
+#!/bin/bash
+re='^[0-9]+$'
+if [[ -z $1 ]]; then
+        echo "I need an AS#"
+        exit
+elif ! [[ $1 =~ $re ]]; then
+        echo "Error: Not an integer"
+        exit
+elif [[ -z $2 ]]; then
+        vTOP=10
+elif ! [[ $2 =~ $re ]]; then
+        echo "Error: not an integer"
+        exit
+elif [[ $2 -ge 30 ]]; then
+        echo "$2 is too high. should be less than 30"
+        exit
+else
+        vTOP=$2
+fi
+cat /logs/loris/acc*log | grep $1 | awk '{print $8}' | sed -e 's/.*sony.*/sonycoment/Ig' -e's/.*dsrw.*/amazondsrw/Ig' -e 's/.s.llnwi.net//Ig' | sort | uniq -c | sort -nr | head -n $vTOP
